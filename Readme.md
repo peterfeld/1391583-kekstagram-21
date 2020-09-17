@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алена Петерфельд](https://up.htmlacademy.ru/javascript/21/user/1391583).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Хапов] (https://htmlacademy.ru/profile/id118459).
 
 ---
 
