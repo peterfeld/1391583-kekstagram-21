@@ -11,7 +11,7 @@ const NAMES = [`Иван`, `Хуан Себастьян`, `Мария`, `Кри�
 
 const DESCRIPTIONS = [`Описание 1`, `Описание 2`, `Описание 3`];
 
-const pictureTemplate = document.querySelector(`#picture`);
+const pictureTemplate = document.querySelector(`#picture`).content;;
 const pictureListElement = document.querySelector(`.pictures`);
 const fragment = document.createDocumentFragment();
 
@@ -25,21 +25,6 @@ const getRandomData = function (arr) {
   let arrHeight = arr.length - 1;
   let randomIndex = getRandomNumder(0, arrHeight);
   return arr[randomIndex];
-};
-
-const getUrlPhoto = function () {
-  let UrlPhoto = `photos/` + getRandomNumder(1, 25) + `.jpg`;
-  return UrlPhoto;
-};
-
-const getDescription = function () {
-  let descriptionPhoto = getRandomData(DESCRIPTIONS);
-  return descriptionPhoto;
-};
-
-const getLikes = function () {
-  let likesOnPhoto = getRandomNumder(15, 200);
-  return likesOnPhoto;
 };
 
 const getAvatarUrl = function () {
@@ -57,28 +42,18 @@ const getMassage = function () {
   return getRandomData(COMMENTS);
 };
 
-const getName = function () {
-  let userName = getRandomData(NAMES);
-  return userName;
-};
-
-let commentsUsers = [
-  {
-    avatar: getAvatarUrl(),
-    message: getMassage(),
-    name: getName()
-  },
-  {
-    avatar: getAvatarUrl(),
-    message: getMassage(),
-    name: getName()
-  },
-  {
-    avatar: getAvatarUrl(),
-    message: getMassage(),
-    name: getName()
+let commentsUsersFoo = function () {
+  let commentsUsers = [];
+  for (let i = 1; i < getRandomNumder(1,10); i++) {
+    commentsUsers[i] = {
+      avatar: getAvatarUrl(),
+      message: getMassage(),
+      name: getRandomData(NAMES)
+    }
   }
-];
+
+  return commentsUsers;
+};
 
 
 const usersPosts = function () {
@@ -86,10 +61,10 @@ const usersPosts = function () {
 
   for (let i = 0; i < 25; i++) {
     userPost.push({
-      url: getUrlPhoto(),
-      description: getDescription(),
-      likes: getLikes(),
-      comments: commentsUsers
+      url: `photos/${i+1}.jpg`,
+      description: getRandomData(DESCRIPTIONS),
+      likes: getRandomNumder(15, 200),
+      comments: commentsUsersFoo()
     });
   }
 
@@ -98,17 +73,20 @@ const usersPosts = function () {
 
 const renderPost = function (post) {
   const pictureElement = pictureTemplate.cloneNode(true);
+  let AmountComments = post.comments.length;
 
   pictureElement.querySelector(`.picture__img`).src = post.url;
   pictureElement.querySelector(`.picture__likes`).textContent = post.likes;
-  pictureElement.querySelector(`.picture__comments`).textContent = post.comments;
+  pictureElement.querySelector(`.picture__comments`).textContent = AmountComments;
 
   return pictureElement;
 };
 
 const renderPosts = function () {
-  for (let i = 0; i < usersPosts().length; i++) {
-    fragment.appendChild(renderPost(usersPosts()[i]));
+  const posts = usersPosts();
+
+  for (let i = 0; i < posts.length; i++) {
+    fragment.appendChild(renderPost(posts[i]));
   }
   pictureListElement.appendChild(fragment);
 };
