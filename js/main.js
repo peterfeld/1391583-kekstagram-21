@@ -11,7 +11,7 @@ const NAMES = [`Иван`, `Хуан Себастьян`, `Мария`, `Кри�
 
 const DESCRIPTIONS = [`Описание 1`, `Описание 2`, `Описание 3`];
 
-const pictureTemplate = document.querySelector(`#picture`).content;;
+const pictureTemplate = document.querySelector(`#picture`).content;
 const pictureListElement = document.querySelector(`.pictures`);
 const fragment = document.createDocumentFragment();
 
@@ -44,12 +44,12 @@ const getMassage = function () {
 
 let commentsUsersFoo = function () {
   let commentsUsers = [];
-  for (let i = 1; i < getRandomNumder(1,10); i++) {
+  for (let i = 1; i < getRandomNumder(1, 10); i++) {
     commentsUsers[i] = {
       avatar: getAvatarUrl(),
       message: getMassage(),
       name: getRandomData(NAMES)
-    }
+    };
   }
 
   return commentsUsers;
@@ -61,7 +61,7 @@ const usersPosts = function () {
 
   for (let i = 0; i < 25; i++) {
     userPost.push({
-      url: `photos/${i+1}.jpg`,
+      url: `photos/${i + 1}.jpg`,
       description: getRandomData(DESCRIPTIONS),
       likes: getRandomNumder(15, 200),
       comments: commentsUsersFoo()
