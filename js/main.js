@@ -15,6 +15,7 @@ const pictureTemplate = document.querySelector(`#picture`).content;
 const pictureListElement = document.querySelector(`.pictures`);
 const fragment = document.createDocumentFragment();
 
+
 const getRandomNumder = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -22,19 +23,14 @@ const getRandomNumder = function (min, max) {
 };
 
 const getRandomData = function (arr) {
-  let arrHeight = arr.length - 1;
-  let randomIndex = getRandomNumder(0, arrHeight);
+  let arrLength = arr.length - 1;
+  let randomIndex = getRandomNumder(0, arrLength);
   return arr[randomIndex];
 };
 
-const getAvatarUrl = function () {
-  let avatarUrl = `img/avatar-` + getRandomNumder(1, 6) + `.svg`;
-  return avatarUrl;
-};
-
 const getMassage = function () {
-  let RandomIndex = getRandomNumder(1, 2);
-  if (RandomIndex === 2) {
+  let randomIndex = getRandomNumder(1, 2);
+  if (randomIndex === 2) {
     let massageUser1 = getRandomData(COMMENTS);
     let massageUser2 = getRandomData(COMMENTS);
     return massageUser1 + massageUser2;
@@ -42,11 +38,11 @@ const getMassage = function () {
   return getRandomData(COMMENTS);
 };
 
-let commentsUsersFoo = function () {
+let getCommentsUsersFoo = function () {
   let commentsUsers = [];
   for (let i = 1; i < getRandomNumder(1, 10); i++) {
     commentsUsers[i] = {
-      avatar: getAvatarUrl(),
+      avatar: `img/avatar-${getRandomNumder(1, 6)}.svg`,
       message: getMassage(),
       name: getRandomData(NAMES)
     };
@@ -56,7 +52,7 @@ let commentsUsersFoo = function () {
 };
 
 
-const usersPosts = function () {
+const getUsersPosts = function () {
   let userPost = [];
 
   for (let i = 0; i < 25; i++) {
@@ -64,14 +60,14 @@ const usersPosts = function () {
       url: `photos/${i + 1}.jpg`,
       description: getRandomData(DESCRIPTIONS),
       likes: getRandomNumder(15, 200),
-      comments: commentsUsersFoo()
+      comments: getCommentsUsersFoo()
     });
   }
 
   return userPost;
 };
 
-const renderPost = function (post) {
+const getRenderPost = function (post) {
   const pictureElement = pictureTemplate.cloneNode(true);
   let AmountComments = post.comments.length;
 
@@ -82,13 +78,14 @@ const renderPost = function (post) {
   return pictureElement;
 };
 
-const renderPosts = function () {
-  const posts = usersPosts();
+const getRenderPosts = function () {
+  const posts = getUsersPosts();
 
   for (let i = 0; i < posts.length; i++) {
-    fragment.appendChild(renderPost(posts[i]));
+    fragment.appendChild(getRenderPost(posts[i]));
   }
   pictureListElement.appendChild(fragment);
 };
 
-renderPosts();
+getRenderPosts();
+
