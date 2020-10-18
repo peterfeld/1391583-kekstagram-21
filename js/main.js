@@ -163,6 +163,19 @@ const effectChangeHandlet = function (evt) {
   }
 };
 
+const searchArr = function (arr) {
+  for (i = 0; i < arr.length; i++) {
+    let objectArr = arr[i];
+      for (let j = i + 1; j < arr.length - 1; j++) {
+        if (arr[j] === objectArr) {
+          return true;
+        }
+
+        return false;
+      }
+  }
+}
+
 const verifyValidity = function () {
   let hashtags = hashtagsInput.split(` `);
   let reStartHashtags = /^#[]*$/;
@@ -180,6 +193,8 @@ const verifyValidity = function () {
       hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags[i].value.length - MAX_HASHTAG_LENGTH}симв.`);
     } else if (hashtags.length > MAX_HASHTAGS) {
       hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS}хеш-теги`);
+    } else if (searchArr(hashtags)) {
+      hashtagsInput.setCustomValidity(`Удалите повторяющиееся хэш-теги`);
     } else {
       hashtagsInput.setCustomValidity(``);
     }
