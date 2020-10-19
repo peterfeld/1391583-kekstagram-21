@@ -27,12 +27,20 @@ const effectPhobos = uploadOverlayImg.querySelector(`#effect-phobos`);
 const effectHeat = uploadOverlayImg.querySelector(`#effect-heat`);
 const effectNone = uploadOverlayImg.querySelector(`#effect-none`);
 const effectForm = document.querySelector(`.img-upload__form`);
+const effectChromeValue = `chrome`;
+const effectSepiaValue = `sepia`;
+const effectMarvinValue = `marvin`;
+const effectPhobosValue = `phobos`;
+const effectHeatValue = `heat`;
+
 
 const imgUploadScale = uploadOverlayImg.querySelector(`.img-upload__scale`);
 const scaleControlSmaller = imgUploadScale.querySelector(`.scale__control--smaller`);
 const scaleControlValue = document.querySelector(`.scale__control--value`);
+let scaleValueDefault = 100;
 
 const hashtagsInput = document.querySelector(`.text__hashtags`);
+
 
 const getRandomNumder = function (min, max) {
   min = Math.ceil(min);
@@ -120,6 +128,7 @@ const openModal = function () {
   pageBody.classList.add(`modal-open`);
 
   document.addEventListener(`keydown`, onModalEscPress);
+  scaleControlValue.value = `100%`;
 };
 
 const closeModal = function () {
@@ -131,29 +140,37 @@ const closeModal = function () {
 };
 
 const changeZoom = function (evt) {
-  scaleControlValue.value = 100;
-  let gap = 25;
+  let MIN_VALUE = 25;
+  let MAX_VALUE = 100;
+  let step = 25;
   if (evt.target === scaleControlSmaller) {
-    scaleControlValue.value = (scaleControlValue.value - gap) + `%`;
+    if (scaleValueDefault === MIN_VALUE) {
+      scaleValueDefault = MIN_VALUE;
+    } else if (scaleValueDefault > MIN_VALUE) {
+      scaleValueDefault = scaleValueDefault - step;
+    }
+  } else if (scaleValueDefault === MAX_VALUE) {
+    scaleValueDefault = MAX_VALUE;
   } else {
-    scaleControlValue.value = `${scaleControlValue.value + gap}%`;
+    scaleValueDefault = scaleValueDefault + step;
   }
+  scaleControlValue.value = `${scaleValueDefault}%`;
 };
 
 const effectChangeHandlet = function (evt) {
-  if (evt.target.value === `chrome`) {
+  if (evt.target.value === effectChromeValue) {
     effectLevelUpload.classList.remove(`hidden`);
     effectChrome.filter = `grayscale(${effectLevelValue.value / 100})`;
-  } else if (evt.target.value === `sepia`) {
+  } else if (evt.target.value === effectSepiaValue) {
     effectLevelUpload.classList.remove(`hidden`);
     effectSepia.filter = `sepia(${effectLevelValue.value / 100})`;
-  } else if (evt.target.value === `marvin`) {
+  } else if (evt.target.value === effectMarvinValue) {
     effectLevelUpload.classList.remove(`hidden`);
     effectMarvin.filter = `invert(${effectLevelValue.value})`;
-  } else if (evt.target.value === `phobos`) {
+  } else if (evt.target.value === effectPhobosValue) {
     effectLevelUpload.classList.remove(`hidden`);
     effectPhobos.filter = `blur(${1 + 0.02 * effectLevelValue.value}px)`;
-  } else if (evt.target.value === `heat`) {
+  } else if (evt.target.value === effectHeatValue) {
     effectLevelUpload.classList.remove(`hidden`);
     effectHeat.filter = `brightness(${1 + 0.02 * effectLevelValue.value})`;
   } else {
@@ -164,49 +181,40 @@ const effectChangeHandlet = function (evt) {
 };
 
 const searchArr = function (arr) {
-  for (i = 0; i < arr.length; i++) {
-    let objectArr = arr[i];
-      for (let j = i + 1; j < arr.length - 1; j++) {
-        if (arr[j] === objectArr) {
-          return true;
-        }
-
-        return false;
-      }
+  for (let i = 0; i < arr.length; i++) {
+    let arrObj = arr[i];
+    let arrSlice = arr.slice(i);
+    Boolean(arrSlice.includes(arrObj));
   }
-}
+};
 
 const verifyValidity = function () {
-  let hashtags = hashtagsInput.split(` `);
-  let reStartHashtags = /^#[]*$/;
-  let reOtherSimbols = /^#[\w\d]*$/;
+  let hashtags = hashtagsInput.value.toLowerCase().split(` `);
+  let reHashtags = /^#[\w]*$/;
   let MAX_HASHTAG_LENGTH = 20;
   let MAX_HASHTAGS = 5;
   for (let i = 0; i < hashtags.length; i++) {
-    if (!reStartHashtags.test(hashtags[i])) {
-      hashtagsInput.setCustomValidity(`Хэштег должен начинаться с #`);
-    } else if (!reOtherSimbols.test(hashtags[i])) {
-      hashtagsInput.setCustomValidity(`Хэштег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.`);
-    } else if (hashtags[i].value.length === 1) {
+    if (!reHashtags.test(hashtags[i])) {
+      hashtagsInput.setCustomValidity(`Хэштег должен начинаться с # и Хэштег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.`);
+    } else if (hashtags[i].split(``).length === 1) {
       hashtagsInput.setCustomValidity(`хеш-тег не может состоять только из одной решётки`);
-    } else if (hashtags[i].value.length > MAX_HASHTAG_LENGTH) {
-      hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags[i].value.length - MAX_HASHTAG_LENGTH}симв.`);
+    } else if (hashtags[i].length > MAX_HASHTAG_LENGTH) {
+      hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags[i].length - MAX_HASHTAG_LENGTH} симв.`);
     } else if (hashtags.length > MAX_HASHTAGS) {
-      hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS}хеш-теги`);
+      hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS} хеш-теги`);
     } else if (searchArr(hashtags)) {
       hashtagsInput.setCustomValidity(`Удалите повторяющиееся хэш-теги`);
     } else {
       hashtagsInput.setCustomValidity(``);
     }
-
     hashtagsInput.reportValidity();
   }
 };
 
 uploadFile.addEventListener(`change`, function () {
   openModal();
-  hashtagsInput.addEventListener(`input`, verifyValidity);
   imgUploadScale.addEventListener(`click`, changeZoom);
+  hashtagsInput.addEventListener(`input`, verifyValidity);
   effectForm.addEventListener(`change`, effectChangeHandlet);
   uploadCancel.addEventListener(`click`, function () {
     closeModal();
