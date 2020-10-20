@@ -117,9 +117,13 @@ getRenderPosts();
 
 const onModalEscPress = function (evt) {
   if (evt.key === `Escape`) {
-    evt.preventDefault();
-    closeModal();
-    uploadFile.value = ``;
+    if (hashtagsInput === document.activeElement) {
+      return;
+    } else {
+      evt.preventDefault();
+      closeModal();
+      uploadFile.value = ``;
+    }
   }
 };
 
@@ -180,12 +184,8 @@ const effectChangeHandlet = function (evt) {
   }
 };
 
-const searchArr = function (arr) {
-  for (let i = 0; i < arr.length; i++) {
-    let arrObj = arr[i];
-    let arrSlice = arr.slice(i);
-    Boolean(arrSlice.includes(arrObj));
-  }
+const inArr = function (value, index, self) {
+  return (self.indexOf(value) !== index);
 };
 
 const verifyValidity = function () {
@@ -193,6 +193,9 @@ const verifyValidity = function () {
   let reHashtags = /^#[\w]*$/;
   let MAX_HASHTAG_LENGTH = 20;
   let MAX_HASHTAGS = 5;
+  let searchDubl = hashtags.filter(inArr);
+  let dublikateHashtagsLength = searchDubl.length;
+
   for (let i = 0; i < hashtags.length; i++) {
     if (!reHashtags.test(hashtags[i])) {
       hashtagsInput.setCustomValidity(`Хэштег должен начинаться с # и Хэштег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.`);
@@ -202,7 +205,7 @@ const verifyValidity = function () {
       hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags[i].length - MAX_HASHTAG_LENGTH} симв.`);
     } else if (hashtags.length > MAX_HASHTAGS) {
       hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS} хеш-теги`);
-    } else if (searchArr(hashtags)) {
+    } else if (dublikateHashtagsLength !== 0) {
       hashtagsInput.setCustomValidity(`Удалите повторяющиееся хэш-теги`);
     } else {
       hashtagsInput.setCustomValidity(``);
