@@ -26,12 +26,14 @@ const effectMarvin = uploadOverlayImg.querySelector(`#effect-marvin`);
 const effectPhobos = uploadOverlayImg.querySelector(`#effect-phobos`);
 const effectHeat = uploadOverlayImg.querySelector(`#effect-heat`);
 const effectNone = uploadOverlayImg.querySelector(`#effect-none`);
+const imgPreview = uploadOverlayImg.querySelector(`.img-upload__preview`);
 const effectForm = document.querySelector(`.img-upload__form`);
 const effectChromeValue = `chrome`;
 const effectSepiaValue = `sepia`;
 const effectMarvinValue = `marvin`;
 const effectPhobosValue = `phobos`;
 const effectHeatValue = `heat`;
+let effectClass;
 
 
 const imgUploadScale = uploadOverlayImg.querySelector(`.img-upload__scale`);
@@ -162,22 +164,31 @@ const changeZoom = function (evt) {
 };
 
 const effectChangeHandlet = function (evt) {
-  if (evt.target.value === effectChromeValue) {
+
+  const changeEffectClass = function () {
+
+    imgPreview.classList.remove(effectClass);
+    effectClass = `effects__preview--${evt.target.value}`;
+    imgPreview.classList.add(effectClass);
     effectLevelUpload.classList.remove(`hidden`);
+  };
+  if (evt.target.value === effectChromeValue) {
+    changeEffectClass();
     effectChrome.filter = `grayscale(${effectLevelValue.value / 100})`;
   } else if (evt.target.value === effectSepiaValue) {
-    effectLevelUpload.classList.remove(`hidden`);
+    changeEffectClass();
     effectSepia.filter = `sepia(${effectLevelValue.value / 100})`;
   } else if (evt.target.value === effectMarvinValue) {
-    effectLevelUpload.classList.remove(`hidden`);
+    changeEffectClass();
     effectMarvin.filter = `invert(${effectLevelValue.value})`;
   } else if (evt.target.value === effectPhobosValue) {
-    effectLevelUpload.classList.remove(`hidden`);
+    changeEffectClass();
     effectPhobos.filter = `blur(${1 + 0.02 * effectLevelValue.value}px)`;
   } else if (evt.target.value === effectHeatValue) {
-    effectLevelUpload.classList.remove(`hidden`);
+    changeEffectClass();
     effectHeat.filter = `brightness(${1 + 0.02 * effectLevelValue.value})`;
   } else {
+    imgPreview.classList.remove(effectClass);
     effectNone.filter = ``;
     effectLevelValue.value = `100`;
     effectLevelUpload.classList.add(`hidden`);
