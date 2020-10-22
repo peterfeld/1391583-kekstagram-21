@@ -39,12 +39,15 @@ let getCommentsUsersFoo = function () {
 
 const getUsersPosts = function () {
   let userPost = [];
+  const NUMBERSOFPOSTS = 25;
+  const MINLIKES = 15;
+  const MAXLIKES = 200;
 
-  for (let i = 0; i < 25; i++) {
+  for (let i = 0; i < NUMBERSOFPOSTS; i++) {
     userPost.push({
       url: `photos/${i + 1}.jpg`,
       description: window.data.getRandomData(DESCRIPTIONS),
-      likes: window.data.getRandomNumder(15, 200),
+      likes: window.data.getRandomNumder(MINLIKES, MAXLIKES),
       comments: getCommentsUsersFoo()
     });
   }
