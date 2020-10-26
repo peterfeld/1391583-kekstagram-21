@@ -141,12 +141,12 @@
     });
     document.addEventListener(`keydown`, function (evt) {
       if (evt.target === `Escape`) {
-        errorTemplate .parentNode.removeChild(errorTemplate);
+        errorTemplate.parentNode.removeChild(errorTemplate);
         evt.preventDefault();
       }
     });
     document.addEventListener(`click`, function () {
-      errorTemplate .parentNode.removeChild(errorTemplate);
+      errorTemplate.parentNode.removeChild(errorTemplate);
     });
   };
 
