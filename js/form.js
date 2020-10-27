@@ -108,45 +108,62 @@
     }
   };
 
-  const inArr = function (value, index, self) {
-    return (self.indexOf(value) !== index);
+  const getSuccess = function () {
+    const successTemplate = document.querySelector(`#success`);
+    const successButton = successTemplate.querySelector(`.success__button`);
+    hashtagsInput.value = ``;
+    closeModal();
+
+    document.main.insertAdjacentElement(`afterbegin`, successTemplate);
+    successButton.addEventListener(`click`, function (evt) {
+      evt.preventDefault();
+      successTemplate.parentNode.removeChild(successTemplate);
+    });
+    document.addEventListener(`keydown`, function (evt) {
+      if (evt.target === `Escape`) {
+        successTemplate.parentNode.removeChild(successTemplate);
+        evt.preventDefault();
+      }
+    });
+    document.addEventListener(`click`, function () {
+      successTemplate.parentNode.removeChild(successTemplate);
+    });
   };
 
-  const verifyValidity = function () {
-    let hashtags = hashtagsInput.value.toLowerCase().split(` `);
-    let reHashtags = /^#[\w]*$/;
-    let MAX_HASHTAG_LENGTH = 20;
-    let MAX_HASHTAGS = 5;
-    let searchDubl = hashtags.filter(inArr);
-    let dublikateHashtagsLength = searchDubl.length;
+  const getError = function () {
+    const errorTemplate = document.querySelector(`#error`);
+    const errorButton = errorTemplate.querySelector(`.error__button`);
 
-    for (let i = 0; i < hashtags.length; i++) {
-      if (!reHashtags.test(hashtags[i])) {
-        hashtagsInput.setCustomValidity(`Хэштег должен начинаться с # и Хэштег не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.`);
-      } else if (hashtags[i].split(``).length === 1) {
-        hashtagsInput.setCustomValidity(`хеш-тег не может состоять только из одной решётки`);
-      } else if (hashtags[i].length > MAX_HASHTAG_LENGTH) {
-        hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags[i].length - MAX_HASHTAG_LENGTH} симв.`);
-      } else if (hashtags.length > MAX_HASHTAGS) {
-        hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS} хеш-теги`);
-      } else if (dublikateHashtagsLength !== 0) {
-        hashtagsInput.setCustomValidity(`Удалите повторяющиееся хэш-теги`);
-      } else {
-        hashtagsInput.setCustomValidity(``);
+    document.main.insertAdjacentElement(`afterbegin`, errorTemplate);
+    errorButton.addEventListener(`click`, function (evt) {
+      evt.preventDefault();
+      errorTemplate.parentNode.removeChild(errorTemplate);
+    });
+    document.addEventListener(`keydown`, function (evt) {
+      if (evt.target === `Escape`) {
+        errorTemplate.parentNode.removeChild(errorTemplate);
+        evt.preventDefault();
       }
-      hashtagsInput.reportValidity();
-    }
+    });
+    document.addEventListener(`click`, function () {
+      errorTemplate.parentNode.removeChild(errorTemplate);
+    });
   };
 
   uploadFile.addEventListener(`change`, function () {
     openModal();
     imgUploadScale.addEventListener(`click`, changeZoom);
-    hashtagsInput.addEventListener(`input`, verifyValidity);
+    hashtagsInput.addEventListener(`input`, function () {
+      window.verifyValidity();
+    });
     effectForm.addEventListener(`change`, effectChangeHandlet);
+    effectForm.addEventListener(`submit`, function (evt) {
+      window.upload(new FormData(effectForm), getSuccess, getError);
+      evt.preventDefault();
+    });
     uploadCancel.addEventListener(`click`, function () {
       closeModal();
     });
   });
 
 })();
-

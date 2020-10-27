@@ -1,17 +1,24 @@
 'use strict';
 
 (function () {
-  const URL = `https://21.javascript.pages.academy/kekstagram/data`;
+  const URL = `https://21.javascript.pages.academy/kekstagram`;
+  const Code = {
+    OK: 200
+  };
 
-  window.upload = function (onSuccess, onError) {
+  window.upload = function (data, onSuccess, onError) {
     let xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, function () {
-      onSuccess(xhr.response);
+      if (xhr.status === Code.OK) {
+        onSuccess(xhr.response);
+      } else {
+        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+      }
     });
 
-    xhr.open(`GET`, URL);
-    xhr.send();
+    xhr.open(`POST`, URL);
+    xhr.send(data);
   };
 })();
