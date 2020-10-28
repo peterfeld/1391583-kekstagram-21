@@ -11,6 +11,13 @@
       let arrLength = arr.length - 1;
       let randomIndex = window.data.getRandomNumder(0, arrLength);
       return arr[randomIndex];
+    },
+    getRandomArr: function (arr, number) {
+      let arrDate = arr.slice(0);
+      let sortArr = arrDate.sort(function (a, b) {
+        return a.likes - b.likes;
+      });
+      return sortArr.slice(0, number);
     }
   };
 })();
