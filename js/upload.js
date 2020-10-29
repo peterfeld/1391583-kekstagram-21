@@ -13,9 +13,9 @@
     xhr.addEventListener(`load`, function () {
       if (xhr.status === Code.OK) {
         onSuccess(xhr.response);
-      } else {
-        onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
+        return;
       }
+      onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
     });
 
     xhr.open(`POST`, URL);
