@@ -10,7 +10,7 @@
   const imgFilterRamdom = imgFilters.querySelector(`#filter-random`);
 
   const MAXRANDOMIMG = 10;
-
+  let dataPosts = [];
 
   const getRenderPost = function (post) {
     const pictureElement = pictureTemplate.cloneNode(true);
@@ -39,28 +39,32 @@
     evt.target.classList.add(`img-filters__button--active`);
   };
 
+  let render = function (evt) {
+    if (evt.target === imgFilterDefault) {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      renderPost(dataPosts);
+      return;
+    } else if (evt.target === imgFilterDiscussed) {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      let arrDate = dataPosts.slice(0);
+      arrDate.sort(function (a, b) {
+        return b.comments.length - a.comments.length;
+      });
+      renderPost(arrDate);
+    } else {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      renderPost(window.data.getRandomArr(dataPosts, MAXRANDOMIMG));
+    }
+  };
+
+  const debounced = window.debounce(render);
+
   let getFilterImg = function (arr) {
     renderPost(arr);
-    imgFiltersForm.addEventListener(`click`, function (evt) {
-      if (evt.target === imgFilterDefault) {
-        deleteFilterClassButton(evt);
-        deleteImg();
-        window.debounce(renderPost(arr));
-        return;
-      } else if (evt.target === imgFilterDiscussed) {
-        deleteFilterClassButton(evt);
-        deleteImg();
-        let arrDate = arr.slice(0);
-        arrDate.sort(function (a, b) {
-          return b.comments.length - a.comments.length;
-        });
-        window.debounce(renderPost(arrDate));
-      } else {
-        deleteFilterClassButton(evt);
-        deleteImg();
-        window.debounce(renderPost(window.data.getRandomArr(arr, MAXRANDOMIMG)));
-      }
-    });
+    imgFiltersForm.addEventListener(`click`, debounced);
   };
 
   const renderPost = function (arr) {
@@ -71,6 +75,7 @@
   };
 
   let successHandler = function (posts) {
+    dataPosts = posts;
     imgFilters.classList.remove(`img-filters--inactive`);
     getFilterImg(posts);
   };
