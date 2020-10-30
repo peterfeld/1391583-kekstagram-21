@@ -7,6 +7,8 @@
   const imgFiltersForm = imgFilters.querySelector(`.img-filters__form`);
   const imgFilterDefault = imgFilters.querySelector(`#filter-default`);
   const imgFilterDiscussed = imgFilters.querySelector(`#filter-discussed`);
+  const imgFilterRamdom = imgFilters.querySelector(`#filter-random`);
+
   const MAXRANDOMIMG = 10;
 
 
@@ -21,18 +23,41 @@
     return pictureElement;
   };
 
+  const deleteImg = function () {
+    const imgAnotherUsers = Array.from(document.querySelectorAll(`.picture`));
+    for (let i = 0; i < imgAnotherUsers.length; i++) {
+      if (imgAnotherUsers[i].parentNode) {
+        imgAnotherUsers[i].parentNode.removeChild(imgAnotherUsers[i]);
+      }
+    }
+  };
+
+  const deleteFilterClassButton = function (evt) {
+    imgFilterRamdom.classList.remove(`img-filters__button--active`);
+    imgFilterDiscussed.classList.remove(`img-filters__button--active`);
+    imgFilterDefault.classList.remove(`img-filters__button--active`);
+    evt.target.classList.add(`img-filters__button--active`);
+  };
+
   let getFilterImg = function (arr) {
+    renderPost(arr);
     imgFiltersForm.addEventListener(`click`, function (evt) {
       if (evt.target === imgFilterDefault) {
+        deleteFilterClassButton(evt);
+        deleteImg();
         window.debounce(renderPost(arr));
         return;
       } else if (evt.target === imgFilterDiscussed) {
+        deleteFilterClassButton(evt);
+        deleteImg();
         let arrDate = arr.slice(0);
         arrDate.sort(function (a, b) {
           return b.comments.length - a.comments.length;
         });
         window.debounce(renderPost(arrDate));
       } else {
+        deleteFilterClassButton(evt);
+        deleteImg();
         window.debounce(renderPost(window.data.getRandomArr(arr, MAXRANDOMIMG)));
       }
     });
