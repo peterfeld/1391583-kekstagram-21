@@ -19,7 +19,6 @@
     pictureElement.querySelector(`.picture__img`).src = post.url;
     pictureElement.querySelector(`.picture__likes`).textContent = post.likes;
     pictureElement.querySelector(`.picture__comments`).textContent = amountComments;
-
     return pictureElement;
   };
 
@@ -44,6 +43,7 @@
       deleteFilterClassButton(evt);
       deleteImg();
       renderPost(dataPosts);
+      window.preview.openPreview(dataPosts);
       return;
     } else if (evt.target === imgFilterDiscussed) {
       deleteFilterClassButton(evt);
@@ -53,10 +53,12 @@
         return b.comments.length - a.comments.length;
       });
       renderPost(arrDate);
+      window.preview.openPreview(arrDate);
     } else {
       deleteFilterClassButton(evt);
       deleteImg();
       renderPost(window.data.getRandomArr(dataPosts, MAXRANDOMIMG));
+      window.preview.openPreview(dataPosts);
     }
   };
 
@@ -77,8 +79,10 @@
   let successHandler = function (posts) {
     dataPosts = posts;
     imgFilters.classList.remove(`img-filters--inactive`);
-    getFilterImg(posts);
+    getFilterImg(dataPosts);
+    window.preview.openPreview(dataPosts);
   };
+
 
   let errorHandler = function (errorMessage) {
     let node = document.createElement(`div`);
