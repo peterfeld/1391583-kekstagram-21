@@ -7,8 +7,10 @@
   const imgFiltersForm = imgFilters.querySelector(`.img-filters__form`);
   const imgFilterDefault = imgFilters.querySelector(`#filter-default`);
   const imgFilterDiscussed = imgFilters.querySelector(`#filter-discussed`);
-  const MAXRANDOMIMG = 10;
+  const imgFilterRamdom = imgFilters.querySelector(`#filter-random`);
 
+  const MAXRANDOMIMG = 10;
+  let dataPosts = [];
 
   const getRenderPost = function (post) {
     const pictureElement = pictureTemplate.cloneNode(true);
@@ -17,25 +19,54 @@
     pictureElement.querySelector(`.picture__img`).src = post.url;
     pictureElement.querySelector(`.picture__likes`).textContent = post.likes;
     pictureElement.querySelector(`.picture__comments`).textContent = amountComments;
-
     return pictureElement;
   };
 
-  let getFilterImg = function (arr) {
-    imgFiltersForm.addEventListener(`click`, function (evt) {
-      if (evt.target === imgFilterDefault) {
-        window.debounce(renderPost(arr));
-        return;
-      } else if (evt.target === imgFilterDiscussed) {
-        let arrDate = arr.slice(0);
-        arrDate.sort(function (a, b) {
-          return b.comments.length - a.comments.length;
-        });
-        window.debounce(renderPost(arrDate));
-      } else {
-        window.debounce(renderPost(window.data.getRandomArr(arr, MAXRANDOMIMG)));
+  const deleteImg = function () {
+    const imgAnotherUsers = Array.from(document.querySelectorAll(`.picture`));
+    for (let i = 0; i < imgAnotherUsers.length; i++) {
+      if (imgAnotherUsers[i].parentNode) {
+        imgAnotherUsers[i].parentNode.removeChild(imgAnotherUsers[i]);
       }
-    });
+    }
+  };
+
+  const deleteFilterClassButton = function (evt) {
+    imgFilterRamdom.classList.remove(`img-filters__button--active`);
+    imgFilterDiscussed.classList.remove(`img-filters__button--active`);
+    imgFilterDefault.classList.remove(`img-filters__button--active`);
+    evt.target.classList.add(`img-filters__button--active`);
+  };
+
+  let render = function (evt) {
+    if (evt.target === imgFilterDefault) {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      renderPost(dataPosts);
+      window.preview.openPreview(dataPosts);
+      return;
+    } else if (evt.target === imgFilterDiscussed) {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      let arrDate = dataPosts.slice(0);
+      arrDate.sort(function (a, b) {
+        return b.comments.length - a.comments.length;
+      });
+      renderPost(arrDate);
+      window.preview.openPreview(arrDate);
+    } else {
+      deleteFilterClassButton(evt);
+      deleteImg();
+      renderPost(window.data.getRandomArr(dataPosts, MAXRANDOMIMG));
+      window.preview.openPreview(dataPosts);
+    }
+  };
+
+  const debounced = window.debounce(render);
+
+  let getFilterImg = function (arr) {
+    renderPost(arr);
+    imgFiltersForm.addEventListener(`click`, debounced);
   };
 
   const renderPost = function (arr) {
@@ -46,9 +77,12 @@
   };
 
   let successHandler = function (posts) {
+    dataPosts = posts;
     imgFilters.classList.remove(`img-filters--inactive`);
-    getFilterImg(posts);
+    getFilterImg(dataPosts);
+    window.preview.openPreview(dataPosts);
   };
+
 
   let errorHandler = function (errorMessage) {
     let node = document.createElement(`div`);
