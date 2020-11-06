@@ -33,5 +33,4 @@
       hashtagsInput.reportValidity();
     }
   };
-
 })();
