@@ -33,6 +33,28 @@
     pageBody.classList.remove(`modal-open`);
   };
 
+  let renderCommentsEnd = function (arr) {
+    socialComments.insertAdjacentHTML(`beforeend`, `<li class="social__comment">
+    <img
+    class="social__picture"
+    src="${arr.avatar}"
+    alt="${arr.name}"
+    width="35" height="35">
+    <p class="social__text">${arr.message}</p>
+    </li>`);
+  };
+
+  let renderCommentsStart = function (arr) {
+    socialComments.insertAdjacentHTML(`afterbegin`, `<li class="social__comment">
+    <img
+    class="social__picture"
+    src="${arr.avatar}"
+    alt="${arr.name}"
+    width="35" height="35">
+    <p class="social__text">${arr.message}</p>
+    </li>`);
+  };
+
   window.preview = {
     openPreview: function (arr) {
       const pictures = document.querySelectorAll(`.picture`);
@@ -47,16 +69,30 @@
             socialComments.removeChild(socialComments.firstChild);
           }
           previewOpen();
-          for (let i = 0; i < postUrl.comments; i++) {
-            socialComments.insertAdjacentHTML(`afterbegin`, `<li class="social__comment">
-            <img
-            class="social__picture"
-            src="${postUrl.comments[i].avatar}"
-            alt="${postUrl.comments[i].name}"
-            width="35" height="35">
-            <p class="social__text">${postUrl.comments[i].message}</p>
-            </li>`);
+          let commentsIndex = 5;
+          const COMMENTSSTEP = 5;
+          if (commentsIndex > postUrl.comments.length) {
+            for (let i = 0; i < postUrl.comments.length; i++) {
+              renderCommentsStart(postUrl.comments[i]);
+            }
+          } else {
+            for (let i = 0; i < commentsIndex; i++) {
+              renderCommentsStart(postUrl.comments[i]);
+            }
           }
+          commentsLoader.addEventListener(`click`, function () {
+            if ((commentsIndex + COMMENTSSTEP) > postUrl.comments.length) {
+              for (let i = commentsIndex; i < postUrl.comments.length; i++) {
+                renderCommentsEnd(postUrl.comments[i]);
+              }
+              commentsIndex += COMMENTSSTEP;
+            } else {
+              for (let i = commentsIndex; i < (commentsIndex + COMMENTSSTEP); i++) {
+                renderCommentsEnd(postUrl.comments[i]);
+              }
+              commentsIndex += COMMENTSSTEP;
+            }
+          });
         });
       };
 
