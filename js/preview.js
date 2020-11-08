@@ -74,6 +74,7 @@
           if (commentsIndex > postUrl.comments.length) {
             for (let i = 0; i < postUrl.comments.length; i++) {
               renderCommentsStart(postUrl.comments[i]);
+              commentsLoader.classList.add(`hidden`);
             }
           } else {
             for (let i = 0; i < commentsIndex; i++) {
@@ -85,6 +86,7 @@
               for (let i = commentsIndex; i < postUrl.comments.length; i++) {
                 renderCommentsEnd(postUrl.comments[i]);
               }
+              commentsLoader.classList.add(`hidden`);
               commentsIndex += COMMENTSSTEP;
             } else {
               for (let i = commentsIndex; i < (commentsIndex + COMMENTSSTEP); i++) {

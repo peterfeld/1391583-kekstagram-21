@@ -4,7 +4,7 @@
   const uploadOverlayImg = document.querySelector(`.img-upload__overlay`);
   const effectLevelValue = uploadOverlayImg.querySelector(`.effect-level__value`);
   const effectLevelUpload = uploadOverlayImg.querySelector(`.img-upload__effect-level`);
-  const imgPreview = uploadOverlayImg.querySelector(`.img-upload__preview`);
+  const imgPreview = uploadOverlayImg.querySelector(`.img-upload__preview img`);
 
   const effectChromeValue = `chrome`;
   const effectSepiaValue = `sepia`;
