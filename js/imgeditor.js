@@ -56,7 +56,7 @@
         positionPin = MAXLEVELPIN;
       }
 
-      effectLevelPin.style.left = positionPin + `px`;
+      effectLevelPin.style.left = `${positionPin}px`;
       effectLevelDepth.style.width = `${(positionPin * 100) / MAXLEVELPIN}%`;
       effectLevelValue.value = positionPin;
     };
@@ -89,6 +89,7 @@
         scaleValueDefault = scaleValueDefault + step;
       }
       scaleControlValue.value = `${scaleValueDefault}%`;
+      imgPreview.querySelector(`img`).style = `transform: scale(${scaleValueDefault / 100})`;
     },
     effectChangeHandlet: function (evt) {
       const changeEffectClass = function () {
