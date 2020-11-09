@@ -10,10 +10,11 @@
   const imgUploadScale = uploadOverlayImg.querySelector(`.img-upload__scale`);
   const scaleControlValue = document.querySelector(`.scale__control--value`);
   const hashtagsInput = document.querySelector(`.text__hashtags`);
+  const descriptionInput = document.querySelector(`.text__description`);
 
   const onModalEscPress = function (evt) {
     if (evt.key === `Escape`) {
-      if (hashtagsInput === document.activeElement) {
+      if (hashtagsInput === document.activeElement || descriptionInput === document.activeElement) {
         return;
       } else {
         evt.preventDefault();
@@ -87,7 +88,10 @@
       window.imgeditor.changeZoom(evt);
     });
     hashtagsInput.addEventListener(`input`, function () {
-      window.verifyValidity();
+      window.validation.hashtags();
+    });
+    descriptionInput.addEventListener(`input`, function () {
+      window.validation.dexcription();
     });
     effectForm.addEventListener(`change`, function (evt) {
       window.imgeditor.effectChangeHandlet(evt);

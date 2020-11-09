@@ -4,13 +4,7 @@
   const uploadOverlayImg = document.querySelector(`.img-upload__overlay`);
   const effectLevelValue = uploadOverlayImg.querySelector(`.effect-level__value`);
   const effectLevelUpload = uploadOverlayImg.querySelector(`.img-upload__effect-level`);
-  const effectChrome = uploadOverlayImg.querySelector(`#effect-chrome`);
-  const effectSepia = uploadOverlayImg.querySelector(`#effect-sepia`);
-  const effectMarvin = uploadOverlayImg.querySelector(`#effect-marvin`);
-  const effectPhobos = uploadOverlayImg.querySelector(`#effect-phobos`);
-  const effectHeat = uploadOverlayImg.querySelector(`#effect-heat`);
-  const effectNone = uploadOverlayImg.querySelector(`#effect-none`);
-  const imgPreview = uploadOverlayImg.querySelector(`.img-upload__preview`);
+  const imgPreview = uploadOverlayImg.querySelector(`.img-upload__preview img`);
 
   const effectChromeValue = `chrome`;
   const effectSepiaValue = `sepia`;
@@ -27,6 +21,12 @@
   const effectLevelPin = uploadOverlayImg.querySelector(`.effect-level__pin`);
   const effectLevelDepth = uploadOverlayImg.querySelector(`.effect-level__depth`);
 
+  let resetEffect = function () {
+    imgPreview.style = ``;
+    effectLevelPin.style.left = `453px`;
+    effectLevelDepth.style.width = `100%`;
+  };
+
   let mouseDownFoo = function (evt) {
     evt.preventDefault();
 
@@ -39,6 +39,8 @@
       moveEvt.preventDefault();
       const MINLEVELPIN = 0;
       const MAXLEVELPIN = 453;
+      const EFFECTSPET = 0.002;
+      const EFFECTSTEPSPECIAL = 0.0066;
 
       let shift = {
         x: startCoords.x - moveEvt.clientX
@@ -56,9 +58,22 @@
         positionPin = MAXLEVELPIN;
       }
 
-      effectLevelPin.style.left = positionPin + `px`;
+      effectLevelPin.style.left = `${positionPin}px`;
       effectLevelDepth.style.width = `${(positionPin * 100) / MAXLEVELPIN}%`;
       effectLevelValue.value = positionPin;
+      if (imgPreview.classList.contains(`effects__preview--chrome`)) {
+        imgPreview.style = `filter: grayscale(${positionPin * EFFECTSPET})`;
+      } else if (imgPreview.classList.contains(`effects__preview--sepia`)) {
+        imgPreview.style = `filter: sepia(${positionPin * EFFECTSPET})`;
+      } else if (imgPreview.classList.contains(`effects__preview--marvin`)) {
+        imgPreview.style = `filter: invert(${positionPin * EFFECTSPET * 100}%)`;
+      } else if (imgPreview.classList.contains(`effects__preview--phobos`)) {
+        imgPreview.style = `filter: blur(${EFFECTSTEPSPECIAL * positionPin}px)`;
+      } else if (imgPreview.classList.contains(`effects__preview--heat`)) {
+        imgPreview.style = `filter: brightness(${EFFECTSTEPSPECIAL * positionPin})`;
+      } else {
+        imgPreview.style = ``;
+      }
     };
 
     let onMouseUp = function (upEvt) {
@@ -89,9 +104,11 @@
         scaleValueDefault = scaleValueDefault + step;
       }
       scaleControlValue.value = `${scaleValueDefault}%`;
+      imgPreview.querySelector(`img`).style = `transform: scale(${scaleValueDefault / 100})`;
     },
     effectChangeHandlet: function (evt) {
       const changeEffectClass = function () {
+        resetEffect();
         imgPreview.classList.remove(effectClass);
         effectClass = `effects__preview--${evt.target.value}`;
         imgPreview.classList.add(effectClass);
@@ -100,23 +117,17 @@
       };
       if (evt.target.value === effectChromeValue) {
         changeEffectClass();
-        effectChrome.filter = `grayscale(${effectLevelValue.value / 100})`;
       } else if (evt.target.value === effectSepiaValue) {
         changeEffectClass();
-        effectSepia.filter = `sepia(${effectLevelValue.value / 100})`;
       } else if (evt.target.value === effectMarvinValue) {
         changeEffectClass();
-        effectMarvin.filter = `invert(${effectLevelValue.value})`;
       } else if (evt.target.value === effectPhobosValue) {
         changeEffectClass();
-        effectPhobos.filter = `blur(${1 + 0.02 * effectLevelValue.value}px)`;
       } else if (evt.target.value === effectHeatValue) {
         changeEffectClass();
-        effectHeat.filter = `brightness(${1 + 0.02 * effectLevelValue.value})`;
       } else {
         imgPreview.classList.remove(effectClass);
-        effectNone.filter = ``;
-        // effectLevelValue.value = `100`;
+        imgPreview.style = `filter: `;
         effectLevelUpload.classList.add(`hidden`);
       }
     }
