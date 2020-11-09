@@ -37,10 +37,10 @@
 
     let onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      const MINLEVELPIN = 0;
-      const MAXLEVELPIN = 453;
-      const EFFECTSPET = 0.002;
-      const EFFECTSTEPSPECIAL = 0.0066;
+      const MIN_LEVEL_PIN = 0;
+      const MAX_LEVEL_PIN = 453;
+      const EFFECT_SPET = 0.002;
+      const EFFECT_STEP_SPECIAL = 0.0066;
 
       let shift = {
         x: startCoords.x - moveEvt.clientX
@@ -52,25 +52,25 @@
 
       let positionPin = effectLevelPin.offsetLeft - shift.x;
 
-      if (positionPin < MINLEVELPIN) {
-        positionPin = MINLEVELPIN;
-      } else if (positionPin > MAXLEVELPIN) {
-        positionPin = MAXLEVELPIN;
+      if (positionPin < MIN_LEVEL_PIN) {
+        positionPin = MIN_LEVEL_PIN;
+      } else if (positionPin > MAX_LEVEL_PIN) {
+        positionPin = MAX_LEVEL_PIN;
       }
 
       effectLevelPin.style.left = `${positionPin}px`;
-      effectLevelDepth.style.width = `${(positionPin * 100) / MAXLEVELPIN}%`;
+      effectLevelDepth.style.width = `${(positionPin * 100) / MAX_LEVEL_PIN}%`;
       effectLevelValue.value = positionPin;
       if (imgPreview.classList.contains(`effects__preview--chrome`)) {
-        imgPreview.style = `filter: grayscale(${positionPin * EFFECTSPET})`;
+        imgPreview.style = `filter: grayscale(${positionPin * EFFECT_SPET})`;
       } else if (imgPreview.classList.contains(`effects__preview--sepia`)) {
-        imgPreview.style = `filter: sepia(${positionPin * EFFECTSPET})`;
+        imgPreview.style = `filter: sepia(${positionPin * EFFECT_SPET})`;
       } else if (imgPreview.classList.contains(`effects__preview--marvin`)) {
-        imgPreview.style = `filter: invert(${positionPin * EFFECTSPET * 100}%)`;
+        imgPreview.style = `filter: invert(${positionPin * EFFECT_SPET * 100}%)`;
       } else if (imgPreview.classList.contains(`effects__preview--phobos`)) {
-        imgPreview.style = `filter: blur(${EFFECTSTEPSPECIAL * positionPin}px)`;
+        imgPreview.style = `filter: blur(${EFFECT_STEP_SPECIAL * positionPin}px)`;
       } else if (imgPreview.classList.contains(`effects__preview--heat`)) {
-        imgPreview.style = `filter: brightness(${EFFECTSTEPSPECIAL * positionPin})`;
+        imgPreview.style = `filter: brightness(${EFFECT_STEP_SPECIAL * positionPin})`;
       } else {
         imgPreview.style = ``;
       }
@@ -106,7 +106,7 @@
       scaleControlValue.value = `${scaleValueDefault}%`;
       imgPreview.querySelector(`img`).style = `transform: scale(${scaleValueDefault / 100})`;
     },
-    effectChangeHandlet: function (evt) {
+    effectChangeHandler: function (evt) {
       const changeEffectClass = function () {
         resetEffect();
         imgPreview.classList.remove(effectClass);

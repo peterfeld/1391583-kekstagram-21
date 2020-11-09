@@ -9,7 +9,7 @@
   const imgFilterDiscussed = imgFilters.querySelector(`#filter-discussed`);
   const imgFilterRamdom = imgFilters.querySelector(`#filter-random`);
 
-  const MAXRANDOMIMG = 10;
+  const MAX_RANDOM_IMG = 10;
   let dataPosts = [];
 
   const getRenderPost = function (post) {
@@ -57,7 +57,7 @@
     } else {
       deleteFilterClassButton(evt);
       deleteImg();
-      renderPost(window.data.getRandomArr(dataPosts, MAXRANDOMIMG));
+      renderPost(window.data.getRandomArr(dataPosts, MAX_RANDOM_IMG));
       window.preview.openPreview(dataPosts);
     }
   };
@@ -96,5 +96,5 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  window.load(successHandler, errorHandler);
+  window.backend.load(successHandler, errorHandler);
 })();

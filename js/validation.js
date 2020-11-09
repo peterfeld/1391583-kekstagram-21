@@ -26,8 +26,8 @@
       const inArr = function (value, index, self) {
         return (self.indexOf(value) !== index);
       };
-      let searchDubl = hashtags.filter(inArr);
-      let dublikateHashtagsLength = searchDubl.length;
+      let searchDuplicate = hashtags.filter(inArr);
+      let duplicateHashtagsLength = searchDuplicate.length;
 
       for (let i = 0; i < hashtags.length; i++) {
         if (!reHashtags.test(hashtags[i])) {
@@ -42,7 +42,7 @@
         } else if (hashtags.length > MAX_HASHTAGS) {
           hashtagsInput.setCustomValidity(`Удалите лишние ${hashtags.length - MAX_HASHTAGS} хеш-теги`);
           errorValidationHashtags();
-        } else if (dublikateHashtagsLength !== 0) {
+        } else if (duplicateHashtagsLength !== 0) {
           hashtagsInput.setCustomValidity(`Удалите повторяющиееся хэш-теги`);
           errorValidationHashtags();
         } else {
@@ -53,7 +53,7 @@
         hashtagsInput.reportValidity();
       }
     },
-    dexcription: function () {
+    description: function () {
       const descriptions = descriptionInput.value.length;
       if (descriptions > MAX_DESCRIPTION) {
         descriptionInput.setCustomValidity(`Удалите лишние ${descriptions - MAX_DESCRIPTION} симв.`);

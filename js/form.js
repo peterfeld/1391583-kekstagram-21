@@ -16,11 +16,11 @@
     if (evt.key === `Escape`) {
       if (hashtagsInput === document.activeElement || descriptionInput === document.activeElement) {
         return;
-      } else {
-        evt.preventDefault();
-        closeModal();
-        uploadFile.value = ``;
       }
+      evt.preventDefault();
+      closeModal();
+      uploadFile.value = ``;
+
     }
   };
 
@@ -41,12 +41,19 @@
   };
 
   const getSuccess = function () {
-    const successTemplate = document.querySelector(`#success`);
-    const successButton = successTemplate.querySelector(`.success__button`);
     hashtagsInput.value = ``;
+
     closeModal();
 
-    document.main.insertAdjacentElement(`afterbegin`, successTemplate);
+    document.querySelector(`main`).insertAdjacentHTML(`afterbegin`, `<section class="success">
+      <div class="success__inner">
+        <h2 class="success__title">Изображение успешно загружено</h2>
+        <button type="button" class="success__button">Круто!</button>
+      </div>
+    </section>`);
+    const successTemplate = document.querySelector(`.success`);
+    const successButton = document.querySelector(`.success__button`);
+
     successButton.addEventListener(`click`, function (evt) {
       evt.preventDefault();
       successTemplate.parentNode.removeChild(successTemplate);
@@ -63,7 +70,13 @@
   };
 
   const getError = function () {
-    const errorTemplate = document.querySelector(`#error`);
+    document.querySelector(`main`).insertAdjacentHTML(`afterbegin`, `<section class="error">
+    <div class="error__inner">
+      <h2 class="error__title">Ошибка загрузки файла</h2>
+      <button type="button" class="error__button">Загрузить другой файл</button>
+    </div>
+  </section>`);
+    const errorTemplate = document.querySelector(`.error`);
     const errorButton = errorTemplate.querySelector(`.error__button`);
 
     document.main.insertAdjacentElement(`afterbegin`, errorTemplate);
@@ -91,13 +104,13 @@
       window.validation.hashtags();
     });
     descriptionInput.addEventListener(`input`, function () {
-      window.validation.dexcription();
+      window.validation.description();
     });
     effectForm.addEventListener(`change`, function (evt) {
-      window.imgeditor.effectChangeHandlet(evt);
+      window.imgeditor.effectChangeHandler(evt);
     });
     effectForm.addEventListener(`submit`, function (evt) {
-      window.upload(new FormData(effectForm), getSuccess, getError);
+      window.backend.upload(new FormData(effectForm), getSuccess, getError);
       evt.preventDefault();
     });
     uploadCancel.addEventListener(`click`, function () {
