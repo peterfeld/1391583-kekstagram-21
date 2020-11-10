@@ -35,64 +35,50 @@
   const closeModal = function () {
     uploadOverlayImg.classList.add(`hidden`);
     pageBody.classList.remove(`modal-open`);
-
     document.removeEventListener(`keydown`, onModalEscPress);
     uploadFile.value = ``;
   };
 
-  const getSuccess = function () {
-    hashtagsInput.value = ``;
+  const showMessage = function (status) {
+    const message = document.querySelector(`#${status}`).content.cloneNode(true);
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(message);
+    document.querySelector(`main`).insertBefore(fragment, document.querySelector(`.img-filters`));
 
-    closeModal();
+    const hideMessage = function () {
+      document.querySelector(`main`).removeChild(document.querySelector(`section.${status}`));
+      document.removeEventListener(`click`, onMessageClick);
+      document.removeEventListener(`keydown`, onMessageEsc);
+    };
 
-    document.querySelector(`main`).insertAdjacentHTML(`afterbegin`, `<section class="success">
-      <div class="success__inner">
-        <h2 class="success__title">Изображение успешно загружено</h2>
-        <button type="button" class="success__button">Круто!</button>
-      </div>
-    </section>`);
-    const successTemplate = document.querySelector(`.success`);
-    const successButton = document.querySelector(`.success__button`);
-
-    successButton.addEventListener(`click`, function (evt) {
-      evt.preventDefault();
-      successTemplate.parentNode.removeChild(successTemplate);
-    });
-    document.addEventListener(`keydown`, function (evt) {
-      if (evt.target === `Escape`) {
-        successTemplate.parentNode.removeChild(successTemplate);
+    const onMessageEsc = function (evt) {
+      if (evt.key === window.main.ESCAPE) {
         evt.preventDefault();
+        hideMessage();
       }
-    });
-    document.addEventListener(`click`, function () {
-      successTemplate.parentNode.removeChild(successTemplate);
-    });
+    };
+
+    const onMessageClick = function () {
+      hideMessage();
+    };
+
+    document.querySelector(`.${status}__button`).addEventListener(`click`, onMessageClick);
+    document.addEventListener(`click`, onMessageClick);
+    document.addEventListener(`keydown`, onMessageEsc);
+  };
+
+  const getSuccess = function () {
+    let status = `success`;
+    hashtagsInput.value = ``;
+    showMessage(status);
+    closeModal();
   };
 
   const getError = function () {
-    document.querySelector(`main`).insertAdjacentHTML(`afterbegin`, `<section class="error">
-    <div class="error__inner">
-      <h2 class="error__title">Ошибка загрузки файла</h2>
-      <button type="button" class="error__button">Загрузить другой файл</button>
-    </div>
-  </section>`);
-    const errorTemplate = document.querySelector(`.error`);
-    const errorButton = errorTemplate.querySelector(`.error__button`);
-
-    document.main.insertAdjacentElement(`afterbegin`, errorTemplate);
-    errorButton.addEventListener(`click`, function (evt) {
-      evt.preventDefault();
-      errorTemplate.parentNode.removeChild(errorTemplate);
-    });
-    document.addEventListener(`keydown`, function (evt) {
-      if (evt.target === `Escape`) {
-        errorTemplate.parentNode.removeChild(errorTemplate);
-        evt.preventDefault();
-      }
-    });
-    document.addEventListener(`click`, function () {
-      errorTemplate.parentNode.removeChild(errorTemplate);
-    });
+    let status = `error`;
+    hashtagsInput.value = ``;
+    showMessage(status);
+    closeModal();
   };
 
   uploadFile.addEventListener(`change`, function () {
